@@ -68,9 +68,9 @@ except serial.SerialException as e:
 def main():
     lcd.clear()
     cnt = 0
-    print 'Connected to:' + ser_bms.portstr
-    print 'Connected to:' + ser_eng.portstr
-    print 'Connected to:' + ser_xbee.portstr
+    print 'Successfully connected to:' + ser_bms.portstr
+    print 'Successfully connected to:' + ser_eng.portstr
+    print 'Successfully connected to:' + ser_xbee.portstr
 
     while True:
         print time.localtime()
@@ -128,7 +128,6 @@ def main():
             try:
                 line = []
                 line = ser_eng.readline().split(',')
-                print line
                 speed_eng = line[1]
                 battemp_eng = line[2]
                 cotemp_eng = line[3]  # index out of range
@@ -145,42 +144,45 @@ def main():
         else:
             print 'USB1|ENG:Handling data problem. Please check connections.'
 
-        lcd.set_cursor(8, 0)
-        lcd.message('    ')
-        lcd.set_cursor(8, 1)
-        lcd.message('    ')
-        lcd.set_cursor(8, 2)
-        lcd.message('    ')
-        lcd.set_cursor(8, 3)
-        lcd.message('    ')
+        if str(speed_eng) != '':
 
-        lcd.set_cursor(0, 0)
-        lcd.message('Speed  :')
-        lcd.set_cursor(8, 0)
-        lcd.message(str(speed_eng))
-        lcd.set_cursor(0, 1)
-        lcd.message('Temper1:')
-        lcd.set_cursor(8, 1)
-        lcd.message(str(battemp_eng))
-        lcd.set_cursor(0, 2)
-        lcd.message('Temper2:')
-        lcd.set_cursor(8, 2)
-        lcd.message(str(cotemp_eng))
-        lcd.set_cursor(0, 3)
-        lcd.message('Current:')
-        lcd.set_cursor(8, 3)
-        lcd.message(str(cur_bms))
+            lcd.set_cursor(8, 0)
+            lcd.message('    ')
+            lcd.set_cursor(8, 1)
+            lcd.message('    ')
+            lcd.set_cursor(8, 2)
+            lcd.message('    ')
+            lcd.set_cursor(8, 3)
+            lcd.message('    ')
+
+            lcd.set_cursor(0, 0)
+            lcd.message('Speed  :')
+            lcd.set_cursor(8, 0)
+            lcd.message(str(speed_eng))
+            lcd.set_cursor(0, 1)
+            lcd.message('Temper1:')
+            lcd.set_cursor(8, 1)
+            lcd.message(str(battemp_eng))
+            lcd.set_cursor(0, 2)
+            lcd.message('Temper2:')
+            lcd.set_cursor(8, 2)
+            lcd.message(str(cotemp_eng))
+            lcd.set_cursor(0, 3)
+            lcd.message('Current:')
+            lcd.set_cursor(8, 3)
+            lcd.message(str(cur_bms))
 
         if ser_xbee.isOpen():
-            print('#' + ',' + str(battemp_eng) + ',' +
-                  str(cotemp_eng) + ',' +
-                  str(cur_bms) + ',' + str(hvolt_bms) + ',' +
-                  str(speed_eng) + ',' + '?')
+            if str(speed_eng) != '':
+                print('#' + ',' + str(battemp_eng) + ',' +
+                      str(cotemp_eng) + ',' +
+                      str(cur_bms) + ',' + str(hvolt_bms) + ',' +
+                      str(speed_eng) + ',' + '?')
 
-            ser_xbee.writelines('#' + ',' + str(battemp_eng) + ',' +
-                                str(cotemp_eng) + ',' +
-                                str(cur_bms) + ',' + str(hvolt_bms) + ',' +
-                                str(speed_eng) + ',' + '?')
+                ser_xbee.writelines('#' + ',' + str(battemp_eng) + ',' +
+                                    str(cotemp_eng) + ',' +
+                                    str(cur_bms) + ',' + str(hvolt_bms) + ',' +
+                                    str(speed_eng) + ',' + '?')
         else:
             print 'USB2|XBEE:Sending data problem. Please check connections.'
 
