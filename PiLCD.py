@@ -99,15 +99,15 @@ def main():
                             break
                     else:
                         if line[2] == 'BT3':
-                            htemp_bms = str((int(line[5], 16) + (-100)) * 1)
-                            atemp_bms = str((int(line[6], 16) + (-100)) * 1)
+                            htemp_bms = str((int(line[3], 16) + (-100)) * 1)
+                            atemp_bms = str((int(line[4], 16) + (-100)) * 1)
                             # Duzeltilecek ACIL !!!!!@@@@
                             log.append(htemp_bms)
                             log.append(atemp_bms)
                         if line[2] == 'CV1':
                             hvolt_bms = str(
                                 (int(line[3], 16) + (-0)) * 1 / 100)
-                            cur_bms = str((int(line[4], 16) + (-0)) *
+                            cur_bms = str(int(line[4], 16) *
                                           1 / 10)  # list index out of range
                             # Duzeltilecek ACIL !!!!!@@@@
                             log.append(hvolt_bms)
@@ -145,15 +145,31 @@ def main():
         else:
             print 'USB1|ENG:Handling data problem. Please check connections.'
 
-        print cur_bms
+        lcd.set_cursor(8, 0)
+        lcd.message('    ')
+        lcd.set_cursor(8, 1)
+        lcd.message('    ')
+        lcd.set_cursor(8, 2)
+        lcd.message('    ')
+        lcd.set_cursor(8, 3)
+        lcd.message('    ')
+
         lcd.set_cursor(0, 0)
-        lcd.message('Speed : ' + str(speed_eng))
+        lcd.message('Speed  :')
+        lcd.set_cursor(8, 0)
+        lcd.message(str(speed_eng))
         lcd.set_cursor(0, 1)
-        lcd.message('Temp1 : ' + str(battemp_eng))
+        lcd.message('Temper1:')
+        lcd.set_cursor(8, 1)
+        lcd.message(str(battemp_eng))
         lcd.set_cursor(0, 2)
-        lcd.message('Temp2 : ' + str(cotemp_eng))
+        lcd.message('Temper2:')
+        lcd.set_cursor(8, 2)
+        lcd.message(str(cotemp_eng))
         lcd.set_cursor(0, 3)
-        lcd.message('Curr : ' + str(cur_bms))
+        lcd.message('Current:')
+        lcd.set_cursor(8, 3)
+        lcd.message(str(cur_bms))
 
         if ser_xbee.isOpen():
             print('#' + ',' + str(battemp_eng) + ',' +
