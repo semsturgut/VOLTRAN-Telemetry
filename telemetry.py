@@ -1,5 +1,5 @@
 import Adafruit_CharLCD as LCD
-import time
+from time import gmtime, strftime
 import serial
 
 # Sems Turgut 30.07.2016 22:22
@@ -10,7 +10,7 @@ import serial
 
 
 # GPIO Pinleri belirleniyor.
-lcd_rs = 18
+'''lcd_rs = 18
 lcd_en = 23
 lcd_d4 = 12
 lcd_d5 = 16
@@ -18,21 +18,22 @@ lcd_d6 = 20
 lcd_d7 = 21
 lcd_bl = 4
 lcd_cols = 20
-lcd_rows = 4
+lcd_rows = 4'''
 
-htemp_bms = '-1'
-atemp_bms = '-1'
-cur_bms = '-1'
-hvolt_bms = '-1'
+htemp_bms = ''
+atemp_bms = ''
+cur_bms = ''
+hvolt_bms = ''
+batper_bms = ''
 
-speed_eng = '-1'
-battemp_eng = '-1'
-cotemp_eng = '-1'
+speed_eng = ''
+battemp_eng = ''
+cotemp_eng = ''
 
-lcd = LCD.Adafruit_CharLCD(
+'''lcd = LCD.Adafruit_CharLCD(
     lcd_rs, lcd_en, lcd_d4,
     lcd_d5, lcd_d6, lcd_d7,
-    lcd_cols, lcd_rows, lcd_bl)
+    lcd_cols, lcd_rows, lcd_bl)'''
 
 
 try:
@@ -66,14 +67,14 @@ except serial.SerialException as e:
 
 
 def main():
-    lcd.clear()
+    '''lcd.clear()'''
     cnt = 0
     print 'Successfully connected to:' + ser_bms.portstr
     print 'Successfully connected to:' + ser_eng.portstr
     print 'Successfully connected to:' + ser_xbee.portstr
 
     while True:
-        print time.localtime()
+        print strftime("Date :%Y-%m-%d Time :%H:%M:%S", gmtime())
         log = []
         line = []
         if ser_bms.isOpen():
@@ -89,12 +90,18 @@ def main():
                             log.append(atemp_bms)
                         if line[0] == 'CV1':
                             hvolt_bms = str(
-                                (int(line[1], 16) + (-0)) * 1 / 100)
-                            cur_bms = str((int(line[2], 16) + (-0)) *
+                                int(line[1], 16) * 1 / 100)
+                            print '1' + line[2]
+                            cur_bms = str(int(line[2], 16) *
                                           1 / 10)  # list index out of range
                             # Duzeltilecek ACIL !!!!!@@@@
                             log.append(hvolt_bms)
                             log.append(cur_bms)
+                        if line[0] == 'BC1':
+                            batper_bms = str(
+                                int(line[3], 16) / 100)
+                            # Duzeltilecek ACIL !!!!!@@@@
+                            log.append(batper_bms)
                             line = []
                             break
                     else:
@@ -106,20 +113,26 @@ def main():
                             log.append(atemp_bms)
                         if line[2] == 'CV1':
                             hvolt_bms = str(
-                                (int(line[3], 16) + (-0)) * 1 / 100)
-                            cur_bms = str(int(line[4], 16) *
-                                          1 / 10)  # list index out of range
+                                int(line[3], 16) * 1 / 100)
+                            print '2' + line[4]
+                            cur_bms = str(int(line[4], 16) * 1 / 10)
                             # Duzeltilecek ACIL !!!!!@@@@
                             log.append(hvolt_bms)
                             log.append(cur_bms)
+                        if line[2] == 'BC1':
+                            batper_bms = str(
+                                int(line[5], 16) / 100)
+                            # Duzeltilecek ACIL !!!!!@@@@
+                            log.append(batper_bms)
                             line = []
                             break
                 except IndexError as e:
                     print e
-                    htemp_bms = '-1'
-                    atemp_bms = '-1'
-                    cur_bms = '-1'
-                    hvolt_bms = '-1'
+                    htemp_bms = ''
+                    atemp_bms = ''
+                    cur_bms = ''
+                    hvolt_bms = ''
+                    batper_bms = ''
 
         else:
             print 'USB0|BMS:Handling data problem. Please check connections.'
@@ -146,7 +159,7 @@ def main():
 
         if str(speed_eng) != '':
 
-            lcd.set_cursor(8, 0)
+            '''lcd.set_cursor(8, 0)
             lcd.message('    ')
             lcd.set_cursor(8, 1)
             lcd.message('    ')
@@ -170,7 +183,7 @@ def main():
             lcd.set_cursor(0, 3)
             lcd.message('Current:')
             lcd.set_cursor(8, 3)
-            lcd.message(str(cur_bms))
+            lcd.message(str(cur_bms))'''
 
         if ser_xbee.isOpen():
             if str(speed_eng) != '':

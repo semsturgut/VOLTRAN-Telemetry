@@ -1,0 +1,17 @@
+    def __init__(self, rs, en, d4, d5, d6, d7, cols, lines, backlight=None,
+                    invert_polarity=True,
+                    enable_pwm=False,
+                    gpio=GPIO.get_platform_gpio(),
+                    pwm=PWM.get_platform_pwm(),
+                    initial_backlight=1.0):
+
+
+
+        lcd.message('Temp1 :' + str(cotemp_eng) +
+                    ' Temp2 :' + str(htemp_bms))
+        lcd.set_cursor(0, 1)
+        lcd.message('Volta :' + str(hvolt_bms) + 'Curr :' + str(cur_bms))
+        lcd.set_cursor(0, 2)
+        lcd.message('Speeda :' + str(speed_eng) + 'Temp1 :' + str(battemp_eng))
+        lcd.set_cursor(0, 3)
+        lcd.message('CTempc :' + str(cotemp_eng))
